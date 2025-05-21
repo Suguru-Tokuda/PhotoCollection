@@ -22,6 +22,7 @@ enum Query: String {
 class PhotoCollectionViewModel {
     private var query: String?
     private var pageNumber = 1
+    private let perPage = 21
     private var nextPageCursor: String?
     private var loadingStatus: LoadingStatus = .ready
     private var batchCaching: Bool
@@ -67,7 +68,9 @@ class PhotoCollectionViewModel {
         
         do {
             loadingStatus = .loading
-            guard let photoResponseModel = try await photoService.fetchPhotos(query: query, pageNumber: pageNumber) else {
+            guard let photoResponseModel = try await photoService.fetchPhotos(query: query,
+                                                                              pageNumber: pageNumber,
+                                                                              perPage: perPage) else {
                 return
             }
             handleResponse(response: photoResponseModel)
