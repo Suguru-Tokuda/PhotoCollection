@@ -12,50 +12,50 @@
 			containerPortal = BBD9A8212DD8DE6E00BDDE94 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = BBD9A8282DD8DE6E00BDDE94;
-			remoteInfo = SwiftConcurrencyDemo;
+			remoteInfo = PhotoCollection;
 		};
 		BBD9A84A2DD8DE7000BDDE94 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BBD9A8212DD8DE6E00BDDE94 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = BBD9A8282DD8DE6E00BDDE94;
-			remoteInfo = SwiftConcurrencyDemo;
+			remoteInfo = PhotoCollection;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		BBD9A8292DD8DE6E00BDDE94 /* SwiftConcurrencyDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftConcurrencyDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		BBD9A83F2DD8DE7000BDDE94 /* SwiftConcurrencyDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftConcurrencyDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		BBD9A8492DD8DE7000BDDE94 /* SwiftConcurrencyDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftConcurrencyDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BBD9A8292DD8DE6E00BDDE94 /* PhotoCollection.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoCollection.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BBD9A83F2DD8DE7000BDDE94 /* PhotoCollectionTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PhotoCollectionTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BBD9A8492DD8DE7000BDDE94 /* PhotoCollectionUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PhotoCollectionUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		BBD9A8512DD8DE7000BDDE94 /* Exceptions for "SwiftConcurrencyDemo" folder in "SwiftConcurrencyDemo" target */ = {
+		BBD9A8512DD8DE7000BDDE94 /* Exceptions for "PhotoCollection" folder in "PhotoCollection" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = BBD9A8282DD8DE6E00BDDE94 /* SwiftConcurrencyDemo */;
+			target = BBD9A8282DD8DE6E00BDDE94 /* PhotoCollection */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		BBD9A82B2DD8DE6E00BDDE94 /* SwiftConcurrencyDemo */ = {
+		BBD9A82B2DD8DE6E00BDDE94 /* PhotoCollection */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				BBD9A8512DD8DE7000BDDE94 /* Exceptions for "SwiftConcurrencyDemo" folder in "SwiftConcurrencyDemo" target */,
+				BBD9A8512DD8DE7000BDDE94 /* Exceptions for "PhotoCollection" folder in "PhotoCollection" target */,
 			);
-			path = SwiftConcurrencyDemo;
+			path = PhotoCollection;
 			sourceTree = "<group>";
 		};
-		BBD9A8422DD8DE7000BDDE94 /* SwiftConcurrencyDemoTests */ = {
+		BBD9A8422DD8DE7000BDDE94 /* PhotoCollectionTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = SwiftConcurrencyDemoTests;
+			path = PhotoCollectionTests;
 			sourceTree = "<group>";
 		};
-		BBD9A84C2DD8DE7000BDDE94 /* SwiftConcurrencyDemoUITests */ = {
+		BBD9A84C2DD8DE7000BDDE94 /* PhotoCollectionUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = SwiftConcurrencyDemoUITests;
+			path = PhotoCollectionUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -88,9 +88,9 @@
 		BBD9A8202DD8DE6E00BDDE94 = {
 			isa = PBXGroup;
 			children = (
-				BBD9A82B2DD8DE6E00BDDE94 /* SwiftConcurrencyDemo */,
-				BBD9A8422DD8DE7000BDDE94 /* SwiftConcurrencyDemoTests */,
-				BBD9A84C2DD8DE7000BDDE94 /* SwiftConcurrencyDemoUITests */,
+				BBD9A82B2DD8DE6E00BDDE94 /* PhotoCollection */,
+				BBD9A8422DD8DE7000BDDE94 /* PhotoCollectionTests */,
+				BBD9A84C2DD8DE7000BDDE94 /* PhotoCollectionUITests */,
 				BBD9A82A2DD8DE6E00BDDE94 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -98,9 +98,9 @@
 		BBD9A82A2DD8DE6E00BDDE94 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				BBD9A8292DD8DE6E00BDDE94 /* SwiftConcurrencyDemo.app */,
-				BBD9A83F2DD8DE7000BDDE94 /* SwiftConcurrencyDemoTests.xctest */,
-				BBD9A8492DD8DE7000BDDE94 /* SwiftConcurrencyDemoUITests.xctest */,
+				BBD9A8292DD8DE6E00BDDE94 /* PhotoCollection.app */,
+				BBD9A83F2DD8DE7000BDDE94 /* PhotoCollectionTests.xctest */,
+				BBD9A8492DD8DE7000BDDE94 /* PhotoCollectionUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -108,9 +108,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		BBD9A8282DD8DE6E00BDDE94 /* SwiftConcurrencyDemo */ = {
+		BBD9A8282DD8DE6E00BDDE94 /* PhotoCollection */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = BBD9A8522DD8DE7000BDDE94 /* Build configuration list for PBXNativeTarget "SwiftConcurrencyDemo" */;
+			buildConfigurationList = BBD9A8522DD8DE7000BDDE94 /* Build configuration list for PBXNativeTarget "PhotoCollection" */;
 			buildPhases = (
 				BBD9A8252DD8DE6E00BDDE94 /* Sources */,
 				BBD9A8262DD8DE6E00BDDE94 /* Frameworks */,
@@ -121,18 +121,18 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				BBD9A82B2DD8DE6E00BDDE94 /* SwiftConcurrencyDemo */,
+				BBD9A82B2DD8DE6E00BDDE94 /* PhotoCollection */,
 			);
-			name = SwiftConcurrencyDemo;
+			name = PhotoCollection;
 			packageProductDependencies = (
 			);
-			productName = SwiftConcurrencyDemo;
-			productReference = BBD9A8292DD8DE6E00BDDE94 /* SwiftConcurrencyDemo.app */;
+			productName = PhotoCollection;
+			productReference = BBD9A8292DD8DE6E00BDDE94 /* PhotoCollection.app */;
 			productType = "com.apple.product-type.application";
 		};
-		BBD9A83E2DD8DE7000BDDE94 /* SwiftConcurrencyDemoTests */ = {
+		BBD9A83E2DD8DE7000BDDE94 /* PhotoCollectionTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = BBD9A8572DD8DE7000BDDE94 /* Build configuration list for PBXNativeTarget "SwiftConcurrencyDemoTests" */;
+			buildConfigurationList = BBD9A8572DD8DE7000BDDE94 /* Build configuration list for PBXNativeTarget "PhotoCollectionTests" */;
 			buildPhases = (
 				BBD9A83B2DD8DE7000BDDE94 /* Sources */,
 				BBD9A83C2DD8DE7000BDDE94 /* Frameworks */,
@@ -144,18 +144,18 @@
 				BBD9A8412DD8DE7000BDDE94 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				BBD9A8422DD8DE7000BDDE94 /* SwiftConcurrencyDemoTests */,
+				BBD9A8422DD8DE7000BDDE94 /* PhotoCollectionTests */,
 			);
-			name = SwiftConcurrencyDemoTests;
+			name = PhotoCollectionTests;
 			packageProductDependencies = (
 			);
-			productName = SwiftConcurrencyDemoTests;
-			productReference = BBD9A83F2DD8DE7000BDDE94 /* SwiftConcurrencyDemoTests.xctest */;
+			productName = PhotoCollectionTests;
+			productReference = BBD9A83F2DD8DE7000BDDE94 /* PhotoCollectionTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		BBD9A8482DD8DE7000BDDE94 /* SwiftConcurrencyDemoUITests */ = {
+		BBD9A8482DD8DE7000BDDE94 /* PhotoCollectionUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = BBD9A85A2DD8DE7000BDDE94 /* Build configuration list for PBXNativeTarget "SwiftConcurrencyDemoUITests" */;
+			buildConfigurationList = BBD9A85A2DD8DE7000BDDE94 /* Build configuration list for PBXNativeTarget "PhotoCollectionUITests" */;
 			buildPhases = (
 				BBD9A8452DD8DE7000BDDE94 /* Sources */,
 				BBD9A8462DD8DE7000BDDE94 /* Frameworks */,
@@ -167,13 +167,13 @@
 				BBD9A84B2DD8DE7000BDDE94 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				BBD9A84C2DD8DE7000BDDE94 /* SwiftConcurrencyDemoUITests */,
+				BBD9A84C2DD8DE7000BDDE94 /* PhotoCollectionUITests */,
 			);
-			name = SwiftConcurrencyDemoUITests;
+			name = PhotoCollectionUITests;
 			packageProductDependencies = (
 			);
-			productName = SwiftConcurrencyDemoUITests;
-			productReference = BBD9A8492DD8DE7000BDDE94 /* SwiftConcurrencyDemoUITests.xctest */;
+			productName = PhotoCollectionUITests;
+			productReference = BBD9A8492DD8DE7000BDDE94 /* PhotoCollectionUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -199,7 +199,7 @@
 					};
 				};
 			};
-			buildConfigurationList = BBD9A8242DD8DE6E00BDDE94 /* Build configuration list for PBXProject "SwiftConcurrencyDemo" */;
+			buildConfigurationList = BBD9A8242DD8DE6E00BDDE94 /* Build configuration list for PBXProject "PhotoCollection" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -213,9 +213,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				BBD9A8282DD8DE6E00BDDE94 /* SwiftConcurrencyDemo */,
-				BBD9A83E2DD8DE7000BDDE94 /* SwiftConcurrencyDemoTests */,
-				BBD9A8482DD8DE7000BDDE94 /* SwiftConcurrencyDemoUITests */,
+				BBD9A8282DD8DE6E00BDDE94 /* PhotoCollection */,
+				BBD9A83E2DD8DE7000BDDE94 /* PhotoCollectionTests */,
+				BBD9A8482DD8DE7000BDDE94 /* PhotoCollectionUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -271,12 +271,12 @@
 /* Begin PBXTargetDependency section */
 		BBD9A8412DD8DE7000BDDE94 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = BBD9A8282DD8DE6E00BDDE94 /* SwiftConcurrencyDemo */;
+			target = BBD9A8282DD8DE6E00BDDE94 /* PhotoCollection */;
 			targetProxy = BBD9A8402DD8DE7000BDDE94 /* PBXContainerItemProxy */;
 		};
 		BBD9A84B2DD8DE7000BDDE94 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = BBD9A8282DD8DE6E00BDDE94 /* SwiftConcurrencyDemo */;
+			target = BBD9A8282DD8DE6E00BDDE94 /* PhotoCollection */;
 			targetProxy = BBD9A84A2DD8DE7000BDDE94 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -289,11 +289,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = FVEGF5DQ7U;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = SwiftConcurrencyDemo/Info.plist;
+				INFOPLIST_FILE = PhotoCollection/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -301,7 +301,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = sugurutokuda.SwiftConcurrencyDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = sugurutokuda.PhotoCollection;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -316,11 +316,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = FVEGF5DQ7U;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = SwiftConcurrencyDemo/Info.plist;
+				INFOPLIST_FILE = PhotoCollection/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -328,7 +328,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = sugurutokuda.SwiftConcurrencyDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = sugurutokuda.PhotoCollection;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -464,12 +464,12 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = sugurutokuda.SwiftConcurrencyDemoTests;
+				PRODUCT_BUNDLE_IDENTIFIER = sugurutokuda.PhotoCollectionTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SwiftConcurrencyDemo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SwiftConcurrencyDemo";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PhotoCollection.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PhotoCollection";
 			};
 			name = Debug;
 		};
@@ -482,12 +482,12 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = sugurutokuda.SwiftConcurrencyDemoTests;
+				PRODUCT_BUNDLE_IDENTIFIER = sugurutokuda.PhotoCollectionTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SwiftConcurrencyDemo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SwiftConcurrencyDemo";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PhotoCollection.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PhotoCollection";
 			};
 			name = Release;
 		};
@@ -498,12 +498,12 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = sugurutokuda.SwiftConcurrencyDemoUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = sugurutokuda.PhotoCollectionUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = SwiftConcurrencyDemo;
+				TEST_TARGET_NAME = PhotoCollection;
 			};
 			name = Debug;
 		};
@@ -514,19 +514,19 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = sugurutokuda.SwiftConcurrencyDemoUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = sugurutokuda.PhotoCollectionUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = SwiftConcurrencyDemo;
+				TEST_TARGET_NAME = PhotoCollection;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		BBD9A8242DD8DE6E00BDDE94 /* Build configuration list for PBXProject "SwiftConcurrencyDemo" */ = {
+		BBD9A8242DD8DE6E00BDDE94 /* Build configuration list for PBXProject "PhotoCollection" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				BBD9A8552DD8DE7000BDDE94 /* Debug */,
@@ -535,7 +535,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		BBD9A8522DD8DE7000BDDE94 /* Build configuration list for PBXNativeTarget "SwiftConcurrencyDemo" */ = {
+		BBD9A8522DD8DE7000BDDE94 /* Build configuration list for PBXNativeTarget "PhotoCollection" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				BBD9A8532DD8DE7000BDDE94 /* Debug */,
@@ -544,7 +544,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		BBD9A8572DD8DE7000BDDE94 /* Build configuration list for PBXNativeTarget "SwiftConcurrencyDemoTests" */ = {
+		BBD9A8572DD8DE7000BDDE94 /* Build configuration list for PBXNativeTarget "PhotoCollectionTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				BBD9A8582DD8DE7000BDDE94 /* Debug */,
@@ -553,7 +553,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		BBD9A85A2DD8DE7000BDDE94 /* Build configuration list for PBXNativeTarget "SwiftConcurrencyDemoUITests" */ = {
+		BBD9A85A2DD8DE7000BDDE94 /* Build configuration list for PBXNativeTarget "PhotoCollectionUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				BBD9A85B2DD8DE7000BDDE94 /* Debug */,
