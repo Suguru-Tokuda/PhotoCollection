@@ -44,8 +44,7 @@ class TabCoordinator: NSObject, TabCoordinatorProtocol {
     func start() {
         let pages: [TabBarPage] = [
             .dogs,
-            .cats,
-            .search
+            .cats
         ].sorted(by: { $0.tabOrderNumber < $1.tabOrderNumber })
         let controllers: [UINavigationController] = pages.compactMap({ getTabController($0) })
         prepareTabBarController(withTabControllers: controllers)
@@ -67,7 +66,7 @@ class TabCoordinator: NSObject, TabCoordinatorProtocol {
             navController?.setViewControllers([viewController], animated: false)
         case .cats:
             navController = BaseNavigationController()
-            let viewController = PhotoCollectionViewController(allowBatchCaching: false,
+            let viewController = PhotoCollectionViewController(allowBatchCaching: true,
                                                                query: .cats,
                                                                searchEnabled: false)
             navController?.setViewControllers([viewController], animated: false)

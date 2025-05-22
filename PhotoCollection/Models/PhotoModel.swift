@@ -33,15 +33,41 @@ struct PhotoModel: Hashable, Decodable {
     }
     
     let id: String
-    let createdAt: String
-    let updatedAt: String
-    let width: Int
-    let height: Int
-    let color: String
+    let createdAt: String?
+    let updatedAt: String?
+    let width: Int?
+    let height: Int?
+    let color: String?
     let description: String?
-    let urls: URLs
+    let urls: URLs?
     var loadingStatus: LoadingStatus?
     var cachedImageURL: URL?
+    var isPlaceholder: Bool?
+
+    init(id: String,
+         createdAt: String? = nil,
+         updatedAt: String? = nil,
+         width: Int? = nil,
+         height: Int? = nil,
+         color: String? = nil,
+         description: String? = nil,
+         urls: URLs? = nil,
+         loadingStatus: LoadingStatus? = nil,
+         cachedImageURL: URL? = nil,
+         isPlaceholder: Bool? = nil
+    ) {
+        self.id = id
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
+        self.width = width
+        self.height = height
+        self.color = color
+        self.description = description
+        self.urls = urls
+        self.loadingStatus = loadingStatus
+        self.cachedImageURL = cachedImageURL
+        self.isPlaceholder = isPlaceholder
+    }
 
     enum CodingKeys: String, CodingKey {
         case id

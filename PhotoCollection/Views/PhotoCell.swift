@@ -1,5 +1,5 @@
 //
-//  PhotoCellCollectionViewCell.swift
+//  PhotoCell.swift
 //  PhotoCollection
 //
 //  Created by Suguru Tokuda on 5/20/25.
@@ -7,8 +7,8 @@
 
 import UIKit
 
-class PhotoCellCollectionViewCell: UICollectionViewCell {
-    static let reuseIdentifier = "PhotoCellCollectionViewCell"
+class PhotoCell: UICollectionViewCell {
+    static let reuseIdentifier = "PhotoCell"
 
     var model: PhotoView.Model? {
         didSet {

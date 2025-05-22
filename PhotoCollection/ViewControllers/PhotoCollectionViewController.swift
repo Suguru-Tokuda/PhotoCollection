@@ -61,19 +61,19 @@ class PhotoCollectionViewController: UIViewController {
     private func addSubscriptions() {
         viewModel
             .photos
+            .combineLatest(viewModel.loadingStatus)
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] photos in
+            .sink { [weak self] value in
                 guard let self else { return }
 
-//                print("new photos sent")
-//                photos.enumerated().forEach { (index, photo) in
-//                    if photo.loadingStatus != .loaded {
-//                        print("\(index) - \(photo.loadingStatus ?? .none)")
-//                    }
-//                }
-                
+                let hasPlaceholder = value.0.contains(where: { $0.isPlaceholder == true })
+
+                photoCollectionView.isScrollEnabled = !hasPlaceholder
+                photoCollectionView.alwaysBounceVertical = !hasPlaceholder
+
                 photoCollectionView.model = PhotoCollectionView.Model(
-                    photos: photos
+                    photos: value.0,
+                    showLoadingIndicator: value.1 == .loading
                 )
             }
             .store(in: &subscriptions)
@@ -85,6 +85,12 @@ class PhotoCollectionViewController: UIViewController {
                 
             }
             .store(in: &subscriptions)
+
+        photoCollectionView.scrolledToEnd = { [weak self] in
+            Task(priority: .userInitiated) {
+                await self?.viewModel.getPhotos()
+            }            
+        }
     }
 
     private func removeSubscriptions() {

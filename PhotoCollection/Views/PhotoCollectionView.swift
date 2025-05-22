@@ -8,18 +8,28 @@
 import UIKit
 
 class PhotoCollectionView: UICollectionView {
-    enum Section {
-        case main
+    // MARK: Closures
+    var scrolledToEnd: (() -> Void)?
+
+    enum Section: Int {
+        case main = 0
+        case loading = 1
+    }
+
+    enum Item: Hashable {
+        case photo(PhotoModel)
+        case loading
     }
 
     struct Model {
         let photos: [PhotoModel]
+        let showLoadingIndicator: Bool
     }
 
     // MARK: Typealias
 
-    typealias DataSource = UICollectionViewDiffableDataSource<Section, PhotoModel>
-    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, PhotoModel>
+    typealias DataSource = UICollectionViewDiffableDataSource<Section, Item>
+    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
 
     private var flowLayout = UICollectionViewFlowLayout()
     private var diffableDataSource: DataSource?
@@ -28,6 +38,7 @@ class PhotoCollectionView: UICollectionView {
             applyModel()
         }
     }
+    private let threshold: CGFloat = 12
 
     init() {
         super.init(frame: .zero, collectionViewLayout: flowLayout)
@@ -49,10 +60,17 @@ class PhotoCollectionView: UICollectionView {
         flowLayout.minimumLineSpacing = 4
         flowLayout.sectionInset = UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4)
 
-        register(PhotoCellCollectionViewCell.self,
-                 forCellWithReuseIdentifier: PhotoCellCollectionViewCell.reuseIdentifier)
+        registerCells()
         diffableDataSource = makeDataSource()
         alwaysBounceVertical = true
+        delegate = self
+    }
+
+    private func registerCells() {
+        register(PhotoCell.self,
+                 forCellWithReuseIdentifier: PhotoCell.reuseIdentifier)
+        register(LoadingIndicatorCell.self,
+                forCellWithReuseIdentifier: LoadingIndicatorCell.reuseIdentifier)
     }
 
     private func updateItemSize() {
@@ -72,42 +90,97 @@ class PhotoCollectionView: UICollectionView {
 
     private func makeDataSource() -> DataSource {
         DataSource(collectionView: self) { [weak self] collectionView, indexPath, itemIdentifier in
-            guard let self else { return nil }
+            var cell: UICollectionViewCell? = UICollectionViewCell()
 
-            if let cell = dequeuePhotoViewCell(collectionView,
-                                               indexPath: indexPath,
-                                               item: itemIdentifier) {
-                return cell
+            guard let self,
+                  let section = Section(rawValue: indexPath.section) else { return cell }
+
+            switch section {
+            case .main:
+                switch itemIdentifier {
+                case .photo(let model):
+                    cell = dequeuePhotoViewCell(collectionView, indexPath: indexPath, item: model)
+                default:
+                    break
+                }
+                
+            case .loading:
+                cell = dequeueLoadingIndicatorCell(collectionView, indexPath: indexPath)
             }
 
-            return nil
+            return cell
         }
     }
 
-    private func dequeuePhotoViewCell(_ collectionView: UICollectionView, indexPath: IndexPath, item: PhotoModel) -> PhotoCellCollectionViewCell? {
+    private func dequeuePhotoViewCell(_ collectionView: UICollectionView, indexPath: IndexPath, item: PhotoModel) -> PhotoCell? {
         if let cell = collectionView
-            .dequeueReusableCell(withReuseIdentifier: PhotoCellCollectionViewCell.reuseIdentifier,
-                                 for: indexPath) as? PhotoCellCollectionViewCell {
+            .dequeueReusableCell(withReuseIdentifier: PhotoCell.reuseIdentifier,
+                                 for: indexPath) as? PhotoCell {
             cell.model = PhotoView.Model(url: item.cachedImageURL,
-                                         loadingStatus: item.loadingStatus ?? .ready)
+                                         loadingStatus: item.loadingStatus ?? .ready,
+                                         isShimmering: item.isPlaceholder ?? false
+            )
             return cell
         }
 
         return nil
     }
 
+    private func dequeueLoadingIndicatorCell(_ collectionView: UICollectionView, indexPath: IndexPath) -> LoadingIndicatorCell? {
+        collectionView.dequeueReusableCell(withReuseIdentifier: LoadingIndicatorCell.reuseIdentifier, for: indexPath) as? LoadingIndicatorCell
+    }
+
     private func applyModel() {
         guard let model else { return }
 
-        applySnapshot(photos: model.photos)
+        applySnapshot(photos: model.photos,
+                      showLoadingIndicator: model.showLoadingIndicator)
     }
 
-    private func applySnapshot(photos: [PhotoModel]) {
+    private func applySnapshot(photos: [PhotoModel], showLoadingIndicator: Bool) {
         guard let diffableDataSource else { return }
         
         var snapshot = Snapshot()
         snapshot.appendSections([.main])
-        snapshot.appendItems(photos)
+        snapshot.appendItems(photos.map { .photo($0) })
+        let hasPlaceholders = photos.contains(where: { $0.isPlaceholder == true })
+
+        if showLoadingIndicator && hasPlaceholders == false {
+            if !snapshot.sectionIdentifiers.contains(.loading) {
+                snapshot.appendSections([.loading])
+                snapshot.appendItems([.loading], toSection: .loading)
+            }
+        } else {
+            if snapshot.sectionIdentifiers.contains(.loading) {
+                snapshot.deleteSections([.loading])
+            }
+        }
+
         diffableDataSource.apply(snapshot, animatingDifferences: false)
+    }
+}
+
+extension PhotoCollectionView: UICollectionViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let frameHeight = scrollView.frame.size.height
+
+        if offsetY > contentHeight - frameHeight - threshold {
+            scrolledToEnd?()
+        }
+    }
+}
+
+extension PhotoCollectionView: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        guard let section = Section(rawValue: indexPath.section) else { return .zero }
+
+        switch section {
+        case .main:
+            return flowLayout.itemSize
+        case .loading:
+            return CGSize(width: collectionView.bounds.width, height: 40)
+        }
     }
 }

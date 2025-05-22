@@ -23,8 +23,7 @@ class PhotoCollectionViewModel {
     private var query: String?
     private var pageNumber = 1
     private let perPage = 21
-    private var nextPageCursor: String?
-    private var loadingStatus: LoadingStatus = .ready
+    private var fetchNext = true
     private var batchCaching: Bool
     private var batchTasks = Set<Task<Void, Never>>()
 
@@ -33,6 +32,7 @@ class PhotoCollectionViewModel {
         qos: .userInitiated
     )
 
+    var loadingStatus = CurrentValueSubject<LoadingStatus, Never>(.ready)
     var photos = CurrentValueSubject<[PhotoModel], Never>([])
     private var _photoIndexMap: [String: Int] = [:]
     private var photoIndexMap: [String: Int] {
@@ -64,49 +64,72 @@ class PhotoCollectionViewModel {
 
     func getPhotos() async {
         guard let query,
-              loadingStatus == .ready else { return }
+              fetchNext,
+              loadingStatus.value == .ready else { return }
         
         do {
-            loadingStatus = .loading
+            if photos.value.isEmpty {
+                var placeholders: [PhotoModel] = []
+
+                for _ in 0..<perPage {
+                    placeholders.append(PhotoModel(id: UUID().uuidString, isPlaceholder: true))
+                }
+
+                photos.send(placeholders)
+            }
+
+            loadingStatus.send(.loading)
             guard let photoResponseModel = try await photoService.fetchPhotos(query: query,
                                                                               pageNumber: pageNumber,
                                                                               perPage: perPage) else {
                 return
             }
-            handleResponse(response: photoResponseModel)
-            loadingStatus = .ready
+            await handleResponse(response: photoResponseModel)
+            loadingStatus.send(.ready)
         } catch {
             errorPublisher.send(error)
         }
     }
 
-    private func handleResponse(response: PhotosResponseModel) {
+    private func handleResponse(response: PhotosResponseModel) async {
         guard !response.results.isEmpty else { return }
 
-        if response.totalPages < (pageNumber + 1) {
+        if (pageNumber + 1) < response.totalPages {
             pageNumber += 1
         }
 
-        var photos = self.photos.value
+        fetchNext = pageNumber <= response.totalPages
 
-        for result in response.results {
-            photoIndexMap[result.id] = photos.count
-            photos.append(result)
-        }
-
-        self.photos.send(photos)
+        var photos = self.photos.value.filter { $0.isPlaceholder != true }
+        var count = photos.count
 
         // Do async image caching *after* updating map and sending value
         if batchCaching {
-            Task(priority: .userInitiated) { [weak self] in
-                guard let self else { return }
-                do {
-                    try await self.cacheImages(photoModels: response.results)
-                } catch {
-                    self.errorPublisher.send(error)
+            do {
+                let cachedPhotos = try await self.cacheImages(photoModels: response.results)
+                for cachedPhoto in cachedPhotos {
+                    if photoIndexMap[cachedPhoto.id] == nil {
+                        photoIndexMap[cachedPhoto.id] = count
+                        photos.append(cachedPhoto)
+                        count += 1
+                    }
                 }
+
+                self.photos.send(photos)
+            } catch {
+                errorPublisher.send(error)
             }
         } else {
+            for result in response.results {
+                if photoIndexMap[result.id] == nil {
+                    photoIndexMap[result.id] = count
+                    photos.append(result)
+                    count += 1
+                }
+            }
+
+            self.photos.send(photos)
+
             for photoModel in response.results {
                 Task(priority: .userInitiated) { [weak self] in
                     await self?.cacheImage(photoModel: photoModel)
@@ -116,10 +139,11 @@ class PhotoCollectionViewModel {
     }
 
     private func cacheImage(photoModel: PhotoModel) async {
-        guard let index = photoIndexMap[photoModel.id] else { return }
+        guard let index = photoIndexMap[photoModel.id],
+              let urls = photoModel.urls else { return }
 
         var photoModel = photoModel
-        guard let url = URL(string: photoModel.urls.small) else { return }
+        guard let url = URL(string: urls.small) else { return }
 
         do {
             guard let cachedImageURL = try await imageCachingManager.cacheImage(for: url) else { return }
@@ -142,28 +166,36 @@ class PhotoCollectionViewModel {
         }
     }
 
-    private func cacheImages(photoModels: [PhotoModel]) async throws {
-        try await withThrowingTaskGroup(of: Void.self) { [weak self] group in
+    private func cacheImages(photoModels: [PhotoModel]) async throws -> [PhotoModel] {
+        var retVal: [PhotoModel] = []
+        try await withThrowingTaskGroup(of: PhotoModel?.self) { [weak self] group in
             guard let self else { return }
 
-            for photoModel in photoModels {
-                guard let url = URL(string: photoModel.urls.thumb) else { continue }
+            photoModels.forEach { photoModel in
+                guard let urls = photoModel.urls,
+                      let url = URL(string: urls.thumb) else { return }
 
                 group.addTask { [weak self] in
-                    guard let self else { return }
+                    guard let self else { return nil }
                     
                     if let cachedImageURL = try await imageCachingManager.cacheImage(for: url) {
                         var photoModel = photoModel
                         photoModel.cachedImageURL = cachedImageURL
                         photoModel.loadingStatus = .loaded
-                        guard let index = photoIndexMap[photoModel.id] else { return }
-
-                        photos.value[index] = photoModel
+                        return photoModel
+                    } else {
+                        return nil
                     }
                 }
             }
 
-            for try await _ in group {}
+            for try await result in group {
+                if let photoModel = result {
+                    retVal.append(photoModel)
+                }
+            }
         }
+
+        return retVal
     }
 }
