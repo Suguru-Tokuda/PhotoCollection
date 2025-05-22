@@ -60,7 +60,7 @@ class PhotoCollectionViewController: UIViewController {
 
     private func addSubscriptions() {
         viewModel
-            .photos
+            .photosPublisher
             .combineLatest(viewModel.loadingStatus)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] value in

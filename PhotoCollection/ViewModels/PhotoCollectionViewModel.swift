@@ -27,37 +27,23 @@ class PhotoCollectionViewModel {
     private var batchCaching: Bool
     private var batchTasks = Set<Task<Void, Never>>()
 
-    private var queue = DispatchQueue(
-        label: "com.PhotoCollection.PhotoCollectionViewModelQueueu",
-        qos: .userInitiated
-    )
-
     var loadingStatus = CurrentValueSubject<LoadingStatus, Never>(.ready)
-    var photos = CurrentValueSubject<[PhotoModel], Never>([])
-    private var _photoIndexMap: [String: Int] = [:]
-    private var photoIndexMap: [String: Int] {
-        get {
-            queue.sync { _photoIndexMap }
-        }
-        set {
-            queue.async(flags: .barrier) { [weak self] in
-                self?._photoIndexMap = newValue
-            }
-        }
-    }
-    
+    var photosPublisher = CurrentValueSubject<[PhotoModel], Never>([])
     var errorPublisher = PassthroughSubject<Error, Never>()
 
     // Dependencies
     private let photoService: PhotoServiceProtocol
     private let imageCachingManager: ImageCachingManaging
+    private let photoStorage: PhotoStorageProtocol
 
     init(photoService: PhotoServiceProtocol = PhotoSerice(),
          imageCachingManager: ImageCachingManaging = ImageCachingManager(),
+         photoStorage: PhotoStorageProtocol = PhotoStorage(),
          batchCaching: Bool = false,
          query: Query? = nil) {
         self.photoService = photoService
         self.imageCachingManager = imageCachingManager
+        self.photoStorage = photoStorage
         self.batchCaching = batchCaching
         self.query = query?.rawValue
     }
@@ -68,14 +54,15 @@ class PhotoCollectionViewModel {
               loadingStatus.value == .ready else { return }
         
         do {
-            if photos.value.isEmpty {
+            let photos = await photoStorage.getPhotos()
+            if photos.isEmpty {
                 var placeholders: [PhotoModel] = []
 
                 for _ in 0..<perPage {
                     placeholders.append(PhotoModel(id: UUID().uuidString, isPlaceholder: true))
                 }
-
-                photos.send(placeholders)
+                
+                await addPhotos(placeholders)
             }
 
             loadingStatus.send(.loading)
@@ -100,36 +87,18 @@ class PhotoCollectionViewModel {
 
         fetchNext = pageNumber <= response.totalPages
 
-        var photos = self.photos.value.filter { $0.isPlaceholder != true }
-        var count = photos.count
+        await photoStorage.removePhotos(where: { $0.isPlaceholder == true })
 
         // Do async image caching *after* updating map and sending value
         if batchCaching {
             do {
                 let cachedPhotos = try await self.cacheImages(photoModels: response.results)
-                for cachedPhoto in cachedPhotos {
-                    if photoIndexMap[cachedPhoto.id] == nil {
-                        photoIndexMap[cachedPhoto.id] = count
-                        photos.append(cachedPhoto)
-                        count += 1
-                    }
-                }
-
-                self.photos.send(photos)
+                await addPhotos(cachedPhotos)
             } catch {
                 errorPublisher.send(error)
             }
         } else {
-            for result in response.results {
-                if photoIndexMap[result.id] == nil {
-                    photoIndexMap[result.id] = count
-                    photos.append(result)
-                    count += 1
-                }
-            }
-
-            self.photos.send(photos)
-
+            await addPhotos(response.results)
             for photoModel in response.results {
                 Task(priority: .userInitiated) { [weak self] in
                     await self?.cacheImage(photoModel: photoModel)
@@ -139,7 +108,7 @@ class PhotoCollectionViewModel {
     }
 
     private func cacheImage(photoModel: PhotoModel) async {
-        guard let index = photoIndexMap[photoModel.id],
+        guard let index = await photoStorage.getIndex(photoModel.id),
               let urls = photoModel.urls else { return }
 
         var photoModel = photoModel
@@ -150,20 +119,22 @@ class PhotoCollectionViewModel {
             photoModel.cachedImageURL = cachedImageURL
             photoModel.loadingStatus = .loaded
 
-            updatePhotos(index: index, photo: photoModel)
+            await updatePhotos(index: index, photo: photoModel)
         } catch {
             print("caching failed \(error)")
         }
     }
 
-    private func updatePhotos(index: Int, photo: PhotoModel) {
-        queue.async { [weak self] in
-            guard let self else { return }
+    private func updatePhotos(index: Int, photo: PhotoModel) async {
+        await photoStorage.updatePhoto(at: index, with: photo)
+        let updated = await photoStorage.getPhotos()
+        photosPublisher.send(updated)
+    }
 
-            var currentPhotos = photos.value
-            currentPhotos[index] = photo
-            photos.send(currentPhotos)
-        }
+    private func addPhotos(_ photos: [PhotoModel]) async {
+        await photoStorage.addPhotos(newPhotos: photos)
+        let updated = await photoStorage.getPhotos()
+        photosPublisher.send(updated)
     }
 
     private func cacheImages(photoModels: [PhotoModel]) async throws -> [PhotoModel] {
