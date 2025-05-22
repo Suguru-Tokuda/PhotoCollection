@@ -11,8 +11,9 @@ import UIKit
 class PhotoCollectionViewController: UIViewController {
     private var viewModel: PhotoCollectionViewModel
     private var subscriptions = Set<AnyCancellable>()
+    private var getPhotosTask: Task<Void, Never>?
     private var photoCollectionView: PhotoCollectionView
-
+    
     private var searchEnabled: Bool
     
     init(allowBatchCaching: Bool = false, query: Query? = nil, searchEnabled: Bool = false) {
@@ -21,34 +22,34 @@ class PhotoCollectionViewController: UIViewController {
         self.searchEnabled = searchEnabled
         super.init(nibName: nil, bundle: nil)
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         setupConstraints()
         addSubscriptions()
-
+        
         if !searchEnabled {
             Task { [weak self] in
                 await self?.viewModel.getPhotos()
-            }            
+            }
         }
     }
-
+    
     deinit {
         removeSubscriptions()
     }
-
+    
     private func setupUI() {
         photoCollectionView.translatesAutoresizingMaskIntoConstraints = false
-
+        
         view.addSubview(photoCollectionView)
     }
-
+    
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             photoCollectionView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -57,7 +58,7 @@ class PhotoCollectionViewController: UIViewController {
             photoCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
-
+    
     private func addSubscriptions() {
         viewModel
             .photosPublisher
@@ -65,12 +66,12 @@ class PhotoCollectionViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] value in
                 guard let self else { return }
-
+                
                 let hasPlaceholder = value.0.contains(where: { $0.isPlaceholder == true })
-
+                
                 photoCollectionView.isScrollEnabled = !hasPlaceholder
                 photoCollectionView.alwaysBounceVertical = !hasPlaceholder
-
+                
                 photoCollectionView.model = PhotoCollectionView.Model(
                     photos: value.0,
                     showLoadingIndicator: value.1 == .loading
@@ -85,15 +86,18 @@ class PhotoCollectionViewController: UIViewController {
                 
             }
             .store(in: &subscriptions)
-
+        
         photoCollectionView.scrolledToEnd = { [weak self] in
-            Task(priority: .userInitiated) {
+            guard let self else { return }
+            
+            getPhotosTask = Task(priority: .userInitiated) { [weak self] in
                 await self?.viewModel.getPhotos()
-            }            
+            }
         }
     }
-
+    
     private func removeSubscriptions() {
         subscriptions.removeAll()
+        getPhotosTask?.cancel()
     }
 }

@@ -25,8 +25,8 @@ class PhotoCollectionViewModel {
     private let perPage = 21
     private var fetchNext = true
     private var batchCaching: Bool
-    private var batchTasks = Set<Task<Void, Never>>()
 
+    // Publishers
     var loadingStatus = CurrentValueSubject<LoadingStatus, Never>(.ready)
     var photosPublisher = CurrentValueSubject<[PhotoModel], Never>([])
     var errorPublisher = PassthroughSubject<Error, Never>()
@@ -35,17 +35,26 @@ class PhotoCollectionViewModel {
     private let photoService: PhotoServiceProtocol
     private let imageCachingManager: ImageCachingManaging
     private let photoStorage: PhotoStorageProtocol
+    private let cacheTaskStore: CacheTaskStoreProtocol
 
     init(photoService: PhotoServiceProtocol = PhotoSerice(),
          imageCachingManager: ImageCachingManaging = ImageCachingManager(),
          photoStorage: PhotoStorageProtocol = PhotoStorage(),
+         cacheTaskStore: CacheTaskStoreProtocol = CacheTaskStore(),
          batchCaching: Bool = false,
          query: Query? = nil) {
         self.photoService = photoService
         self.imageCachingManager = imageCachingManager
         self.photoStorage = photoStorage
+        self.cacheTaskStore = cacheTaskStore
         self.batchCaching = batchCaching
         self.query = query?.rawValue
+    }
+
+    deinit {
+        Task { [weak self] in
+            await self?.cacheTaskStore.removeAll()
+        }
     }
 
     func getPhotos() async {
@@ -100,8 +109,15 @@ class PhotoCollectionViewModel {
         } else {
             await addPhotos(response.results)
             for photoModel in response.results {
-                Task(priority: .userInitiated) { [weak self] in
-                    await self?.cacheImage(photoModel: photoModel)
+                if await cacheTaskStore.task(for: photoModel.id) == nil {
+                    let cacheTask = Task(priority: .userInitiated) { [weak self] in
+                        guard let self else { return }
+                        
+                        await cacheImage(photoModel: photoModel)
+                        await cacheTaskStore.remove(for: photoModel.id)
+                    }
+                    
+                    await cacheTaskStore.add(task: cacheTask, for: photoModel.id)
                 }
             }
         }
