@@ -56,6 +56,10 @@ class PhotoView: UIView {
         super.layoutSubviews()
         shimmerLayer.frame = shimmerView.bounds
     }
+
+    func resetImage() {
+        imageView.image = nil
+    }
     
     private func setUpUI() {
         addSubview(imageView)

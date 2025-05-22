@@ -52,4 +52,9 @@ class PhotoCell: UICollectionViewCell {
 
         photoView.model = model
     }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        photoView.resetImage()
+    }
 }
