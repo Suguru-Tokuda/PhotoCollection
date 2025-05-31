@@ -91,19 +91,14 @@ class PhotoCollectionViewModel {
             .debounce(for: .milliseconds(400), scheduler: RunLoop.main)
             .sink { [weak self] searchText in
                 guard let self else { return }
-
-                query = .search(searchText)
+                
                 resetTask?.cancel()
 
                 resetTask = Task(priority: .userInitiated) { [weak self] in
                     guard let self else { return }
 
                     await reset()
-
-                    if !searchText.isEmpty {
-                        query = Query(rawValue: searchText)
-                        await getPhotos()
-                    }
+                    query = .search(searchText)
                 }
             }
             .store(in: &cancellables)

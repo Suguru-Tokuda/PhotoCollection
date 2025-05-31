@@ -12,6 +12,7 @@ class PhotoCollectionViewController: UIViewController {
     private var viewModel: PhotoCollectionViewModel
     private var subscriptions = Set<AnyCancellable>()
     private var getPhotosTask: Task<Void, Never>?
+    private var clearTask: Task<Void, Never>?
 
     // MARK: - UI Components
 
@@ -22,9 +23,8 @@ class PhotoCollectionViewController: UIViewController {
         return stackView
     }()
     private var photoCollectionView: PhotoCollectionView
-    private lazy var searchBar: UISearchBar = {
-        let searchBar = UISearchBar()
-        searchBar.placeholder = "Search photos"
+    private lazy var searchBar: SearchBar = {
+        let searchBar = SearchBar(model: SearchBar.Model(placeholder: "Search photos"))
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         return searchBar
     }()
@@ -125,12 +125,24 @@ class PhotoCollectionViewController: UIViewController {
     }
 }
 
-extension PhotoCollectionViewController: UISearchBarDelegate {
+extension PhotoCollectionViewController: SearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         viewModel.searchPublisher.send(searchText)
     }
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
+        getPhotosTask?.cancel()
+        getPhotosTask = Task(priority: .userInitiated) { [weak self] in
+            await self?.viewModel.getPhotos()
+        }
+    }
+
+    func clearButtonClicked() {
+        clearTask?.cancel()
+        clearTask = Task { [weak self] in
+            self?.searchBar.setText(text: "")
+            await self?.viewModel.reset()
+        }
     }
 }
