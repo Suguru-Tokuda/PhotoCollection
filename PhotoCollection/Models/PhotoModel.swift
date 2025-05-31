@@ -7,15 +7,45 @@
 
 import Foundation
 
+struct PhotosResponseWrapperModel: Decodable {
+    let photos: PhotosResponseModel
+    let stat: String
+}
+
+enum PhotoSize: String {
+    case thumbnailS = "s" // 75px cropped square
+    case thumbnailM = "q" // 150px cropped squre
+    case thumbnailL = "t" // 100px
+    case smallS = "m" // 240px
+    case smallM = "n" // 320px
+    case smallL = "w" // 400px
+    case `default` = "" // 500px
+    case mediumM = "z" // 640px
+    case mediumL = "c" // 800px
+    case largeS = "b" // 1024px
+}
+
 struct PhotosResponseModel: Decodable {
+    let page: Int
+    let pages: Int
+    let perPage: Int
     let total: Int
-    let totalPages: Int
-    let results: [PhotoModel]
+    var photos: [PhotoModel]
 
     enum CodingKeys: String, CodingKey {
+        case page
+        case pages
+        case perPage = "perpage"
         case total
-        case totalPages = "total_pages"
-        case results
+        case photos = "photo"
+    }
+
+    mutating func constructImageURLs(baseURL: String) {
+        self.photos = photos.map {
+            var photo = $0
+            photo.setThumbnailURL(baseURL: baseURL)
+            return photo
+        }
     }
 }
 
@@ -33,37 +63,32 @@ struct PhotoModel: Hashable, Decodable {
     }
     
     let id: String
-    let createdAt: String?
-    let updatedAt: String?
-    let width: Int?
-    let height: Int?
-    let color: String?
-    let description: String?
-    let urls: URLs?
+    let owner: String?
+    let secret: String?
+    let server: String?
+    let farm: Int?
+    let title: String?
     var loadingStatus: LoadingStatus?
+    var thumbnailImageURL: String?
     var cachedImageURL: URL?
     var isPlaceholder: Bool?
 
     init(id: String,
-         createdAt: String? = nil,
-         updatedAt: String? = nil,
-         width: Int? = nil,
-         height: Int? = nil,
-         color: String? = nil,
-         description: String? = nil,
-         urls: URLs? = nil,
+         owner: String? = nil,
+         secret: String? = nil,
+         server: String? = nil,
+         farm: Int? = nil,
+         title: String? = nil,
          loadingStatus: LoadingStatus? = nil,
          cachedImageURL: URL? = nil,
          isPlaceholder: Bool? = nil
     ) {
         self.id = id
-        self.createdAt = createdAt
-        self.updatedAt = updatedAt
-        self.width = width
-        self.height = height
-        self.color = color
-        self.description = description
-        self.urls = urls
+        self.owner = owner
+        self.secret = secret
+        self.server = server
+        self.farm = farm
+        self.title = title
         self.loadingStatus = loadingStatus
         self.cachedImageURL = cachedImageURL
         self.isPlaceholder = isPlaceholder
@@ -71,31 +96,17 @@ struct PhotoModel: Hashable, Decodable {
 
     enum CodingKeys: String, CodingKey {
         case id
-        case createdAt = "created_at"
-        case updatedAt = "updated_at"
-        case width
-        case height
-        case color
-        case description
-        case urls
+        case owner
+        case secret
+        case server
+        case farm
+        case title
+    }
+
+    mutating func setThumbnailURL(baseURL: String) {
+        guard let server,
+              let secret else { return }
+
+        thumbnailImageURL = "\(baseURL)/\(server)/\(id)_\(secret)_\(PhotoSize.thumbnailM.rawValue).jpg"
     }
 }
-
-struct URLs: Hashable, Decodable {
-    let raw: String
-    let full: String
-    let regular: String
-    let small: String
-    let thumb: String
-    let smallS3: String
-
-    enum CodingKeys: String, CodingKey {
-        case raw
-        case full
-        case regular
-        case small
-        case thumb
-        case smallS3 = "small_s3"
-    }
-}
-

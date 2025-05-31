@@ -59,8 +59,10 @@ class NetworkingManager: Networking {
             return try handleResponse(data: data, response: response, type: type.self)
         } catch let error as URLError {
             throw error
+        } catch let error as NetworkError {
+            throw error
         } catch {
-            throw NetworkError.unknown
+            throw error
         }
     }
 
@@ -72,6 +74,7 @@ class NetworkingManager: Networking {
             do {
                 return try JSONDecoder().decode(type.self, from: data)
             } catch {
+                print(error)
                 throw NetworkError.dataParsingError
             }
         } else {

@@ -12,7 +12,22 @@ class PhotoCollectionViewController: UIViewController {
     private var viewModel: PhotoCollectionViewModel
     private var subscriptions = Set<AnyCancellable>()
     private var getPhotosTask: Task<Void, Never>?
+
+    // MARK: - UI Components
+
+    private var stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        return stackView
+    }()
     private var photoCollectionView: PhotoCollectionView
+    private lazy var searchBar: UISearchBar = {
+        let searchBar = UISearchBar()
+        searchBar.placeholder = "Search photos"
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        return searchBar
+    }()
     
     private var searchEnabled: Bool
     
@@ -46,16 +61,24 @@ class PhotoCollectionViewController: UIViewController {
     
     private func setupUI() {
         photoCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        photoCollectionView.keyboardDismissMode = .interactive
         
-        view.addSubview(photoCollectionView)
+        view.addSubview(stackView)
+
+        if searchEnabled {
+            searchBar.delegate = self
+            stackView.addArrangedSubview(searchBar)
+        }
+
+        stackView.addArrangedSubview(photoCollectionView)
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            photoCollectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            photoCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            photoCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            photoCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
     
@@ -99,5 +122,15 @@ class PhotoCollectionViewController: UIViewController {
     private func removeSubscriptions() {
         subscriptions.removeAll()
         getPhotosTask?.cancel()
+    }
+}
+
+extension PhotoCollectionViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        viewModel.searchPublisher.send(searchText)
+    }
+
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
     }
 }

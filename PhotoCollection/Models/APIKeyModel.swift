@@ -11,6 +11,6 @@ struct APIKeyModel: Decodable {
     let apiKey: String
 
     enum CodingKeys: String, CodingKey {
-        case apiKey = "UNSPLASH_API_KEY"
+        case apiKey = "API_KEY"
     }
 }

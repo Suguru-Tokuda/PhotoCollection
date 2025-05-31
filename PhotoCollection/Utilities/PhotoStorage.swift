@@ -13,6 +13,7 @@ protocol PhotoStorageProtocol {
     func updatePhoto(at index: Int, with photo: PhotoModel) async
     func setPhotos(_ newPhotos: [PhotoModel]) async
     func removePhotos(where shouldRemove: @Sendable (PhotoModel) -> Bool) async
+    func removeAll() async
     func getIndex(_ id: String) async -> Int?
 }
 
@@ -37,7 +38,7 @@ actor PhotoStorage: PhotoStorageProtocol {
     }
 
     func updatePhoto(at index: Int, with photo: PhotoModel) {
-        guard index <= photos.count else { return }
+        guard index < photos.count else { return }
 
         photos[index] = photo
     }
@@ -55,6 +56,10 @@ actor PhotoStorage: PhotoStorageProtocol {
         let photosToRemove = photos.filter(shouldRemove)
         photosToRemove.forEach { indexMap[$0.id] = nil }
         photos.removeAll(where: shouldRemove)
+    }
+
+    func removeAll() {
+        photos.removeAll()
     }
 
     func getIndex(_ id: String) -> Int? {
