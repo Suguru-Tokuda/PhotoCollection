@@ -242,5 +242,19 @@ class PhotoCollectionViewModel {
         await photoStorage.removeAll()
         photosPublisher.send([])
         loadingStatus.send(.ready)
+        fetchNext = true
+        pageNumber = 1
+    }
+
+    func resetPageNumber() {
+        pageNumber = 1
+    }
+
+    func setQuery(text: String) {
+        if !text.isEmpty {
+            query = .search(text)
+        } else {
+            query = nil
+        }
     }
 }

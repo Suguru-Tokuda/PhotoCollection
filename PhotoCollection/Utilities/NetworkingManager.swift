@@ -74,7 +74,6 @@ class NetworkingManager: Networking {
             do {
                 return try JSONDecoder().decode(type.self, from: data)
             } catch {
-                print(error)
                 throw NetworkError.dataParsingError
             }
         } else {

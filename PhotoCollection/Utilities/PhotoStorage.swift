@@ -59,6 +59,7 @@ actor PhotoStorage: PhotoStorageProtocol {
     }
 
     func removeAll() {
+        indexMap.removeAll()
         photos.removeAll()
     }
 

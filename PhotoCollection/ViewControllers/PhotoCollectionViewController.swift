@@ -94,7 +94,7 @@ class PhotoCollectionViewController: UIViewController {
                 
                 photoCollectionView.isScrollEnabled = !hasPlaceholder
                 photoCollectionView.alwaysBounceVertical = !hasPlaceholder
-                
+
                 photoCollectionView.model = PhotoCollectionView.Model(
                     photos: value.0,
                     showLoadingIndicator: value.1 == .loading
@@ -132,9 +132,16 @@ extension PhotoCollectionViewController: SearchBarDelegate {
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
+        viewModel.resetPageNumber()
         getPhotosTask?.cancel()
         getPhotosTask = Task(priority: .userInitiated) { [weak self] in
-            await self?.viewModel.getPhotos()
+            guard let self else { return }
+
+            await viewModel.reset()
+            guard let searchText = searchBar.text else { return }
+
+            viewModel.setQuery(text: searchText)
+            await viewModel.getPhotos()
         }
     }
 
